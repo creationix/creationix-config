@@ -2,10 +2,26 @@
 
 var fs = require('fs');
 var pathJoin = require('path').join;
-var groupDir = pathJoin(__dirname, "..", "groups");
+var childProcess = require("child_process");
 
+var groupDir = pathJoin(__dirname, "../groups");
+var scriptPath = pathJoin(__dirname, "../node_modules/wheaty/bin/wheaty-group.js");
 
 fs.readdirSync(groupDir).forEach(function (name) {
-  var config = require(pathJoin(groupDir, name));
-  console.log(name, config);
+  var configPath = pathJoin(groupDir, name);
+  var config = require(configPath);
+  var args = ["--harmony_generators", scriptPath, configPath];
+  var child;
+  var started = Date.now();
+  spawn();
+  function spawn() {
+    console.log("spawning", process.execPath, args);
+    child = childProcess.spawn(process.execPath, args, {
+      stdio: 'inherit'
+    });
+    child.on("exit", onExit);
+  }
+  function onExit(code, signal) {
+    if (Date.now() - started > 1000 && code) spawn();
+  }
 });
