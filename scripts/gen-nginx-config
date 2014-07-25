@@ -1,0 +1,66 @@
+#!/usr/local/bin/node --harmony
+
+var fs = require('fs');
+var pathJoin = require('path').join;
+var groupDir = pathJoin(__dirname, "..", "groups");
+
+var redirects = [];
+
+fs.readdirSync(groupDir).forEach(function (name) {
+  var sitesConfig = require(pathJoin(groupDir, name));
+  var sslSites = [];
+  var sites = [];
+  Object.keys(sitesConfig.sites).forEach(function (domain) {
+    var config = sitesConfig.sites[domain];
+    if (config.ssl) {
+      redirects.push(domain);
+      sslSites.push(domain);
+    }
+    else sites.push(domain);
+  });
+  if (sites.length) {
+    console.log(
+      "\n# " + name +
+      "\nserver {\n" +
+      "  listen 80;\n" +
+      sites.map(serverName).join("") +
+      "  location / {\n" +
+      "    proxy_pass http://127.0.0.1:" + sitesConfig.port + "/;\n" +
+      "    proxy_http_version 1.1;\n" +
+      "    proxy_set_header Host $host;\n" +
+      "  }\n" +
+      "}"
+    );
+  }
+  if (sslSites.length) {
+    console.log(
+      "\n# " + name +
+      "\nserver {\n" +
+      "  listen 443 ssl;\n" +
+      "  ssl_certificate /home/tim/startssl/ssl-unified.crt;\n" +
+      "  ssl_certificate_key /home/tim/startssl/ssl.key;\n" +
+      sslSites.map(serverName).join("") +
+      "  location / {\n" +
+      "    proxy_pass http://127.0.0.1:" + sitesConfig.port + "/;\n" +
+      "    proxy_http_version 1.1;\n" +
+      "    proxy_set_header Host $host;\n" +
+      "  }\n" +
+      "}"
+    );
+  }
+});
+
+if (redirects.length) {
+  console.log(
+    "\n# Combined force SSL redirects" +
+    "\nserver {\n" +
+    "  listen 80;\n" +
+    redirects.map(serverName).join("") +
+    "  return 301 https://$host$request_uri;\n" +
+    "}"
+  );
+}
+
+function serverName(domain) {
+  return "  server_name " + domain + ";\n";
+}

@@ -1,0 +1,3 @@
+This folder holds git caches for the wheaty instances.
+
+To manually GC these, run the local gc script.

@@ -1,0 +1,11 @@
+#!/usr/local/bin/node --harmony
+
+var fs = require('fs');
+var pathJoin = require('path').join;
+var groupDir = pathJoin(__dirname, "..", "groups");
+
+
+fs.readdirSync(groupDir).forEach(function (name) {
+  var config = require(pathJoin(groupDir, name));
+  console.log(name, config);
+});
