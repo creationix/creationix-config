@@ -11,6 +11,10 @@ module.exports = {
       root: "www",
       runtimes: { js: jsRuntime },
     },
+    "htmlbuilder.creationix.com": {
+      url: "https://github.com/creationix/htmlbuilder.git",
+      runtimes: { js: jsRuntime },
+    },
     "conquest.creationix.com": {
       url: "https://github.com/creationix/conquest.git",
       runtimes: { js: jsRuntime },
