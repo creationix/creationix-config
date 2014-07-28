@@ -8,6 +8,15 @@ var redirects = [];
 var httpSites = {};
 var httpsSites = {};
 
+var extras = {
+  "creationix.com":
+  "  location /api/ {\n" +
+  "    proxy_pass http://127.0.0.1:5000;\n" +
+  "    proxy_http_version 1.1;\n" +
+  "    proxy_set_header Host $host;\n" +
+  "  }\n"
+}
+
 fs.readdirSync(groupDir).forEach(function (name) {
   var sitesConfig = require(pathJoin(groupDir, name));
   var sslSites = [];
@@ -18,7 +27,9 @@ fs.readdirSync(groupDir).forEach(function (name) {
 
     var root = config.root ? pathJoin("/", config.root, "/") : "/";
     var backend = "http://127.0.0.1:" + sitesConfig.port + root;
-    var proxy = 
+    var proxy = extras[domain] || "";
+    proxy +=
+      "  location / {\n" +
       "    proxy_pass " + backend + ";\n" +
       "    proxy_http_version 1.1;\n" +
       "    proxy_set_header Host $host;\n";
@@ -26,6 +37,8 @@ fs.readdirSync(groupDir).forEach(function (name) {
       proxy += "    proxy_redirect default;\n";
       proxy += "    proxy_redirect " + root + " /;\n";
     }
+    proxy += "  }\n";
+
     var top = config.ssl ? httpsSites : httpSites;
     var list = top[proxy] || (top[proxy] = []);
     list.push(domain);
@@ -42,9 +55,7 @@ Object.keys(httpSites).forEach(function (proxy) {
     "server{\n" +
     list.map(serverName).join("") +
     "  listen 80;\n" +
-    "  location / {\n" +
     proxy +
-    "  }\n" +
     "}\n"
   );
 });
@@ -57,9 +68,7 @@ Object.keys(httpsSites).forEach(function (proxy) {
     "  listen 443 ssl;\n" +
     "  ssl_certificate /home/tim/startssl/ssl-unified.crt;\n" +
     "  ssl_certificate_key /home/tim/startssl/ssl.key;\n" +
-    "  location / {\n" +
     proxy +
-    "  }\n" +
     "}\n"
   );
 });
