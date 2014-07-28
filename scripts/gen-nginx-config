@@ -18,7 +18,10 @@ fs.readdirSync(groupDir).forEach(function (name) {
 
     var root = config.root ? pathJoin("/", config.root, "/") : "/";
     var backend = "http://127.0.0.1:" + sitesConfig.port + root;
-    var proxy = "    proxy_pass " + backend + ";\n";
+    var proxy = 
+      "    proxy_pass " + backend + ";\n" +
+      "    proxy_http_version 1.1;\n" +
+      "    proxy_set_header Host $host;\n";
     if (config.root) {
       proxy += "    proxy_redirect default;\n";
     }
@@ -40,8 +43,6 @@ Object.keys(httpSites).forEach(function (proxy) {
     "  listen 80;\n" +
     "  location / {\n" +
     proxy +
-    "    proxy_http_version 1.1;\n" +
-    "    proxy_set_header Host $host;\n" +
     "  }\n" +
     "}\n"
   );
@@ -57,7 +58,6 @@ Object.keys(httpsSites).forEach(function (proxy) {
     "  ssl_certificate_key /home/tim/startssl/ssl.key;\n" +
     "  location / {\n" +
     proxy +
-    "    proxy_http_version 1.1;\n" +
     "  }\n" +
     "}\n"
   );
