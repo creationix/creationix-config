@@ -8,6 +8,7 @@
   },
   "homepage": "https://github.com/creationix/creationix-config",
   "dependencies": {
+    "js-git": "^0.7.5",
     "wheaty": "^0.1.3",
     "wheaty-js-runtime": "^0.1.0"
   }
