@@ -14,11 +14,16 @@ fs.readdirSync(groupDir).forEach(function (name) {
   var sites = [];
   Object.keys(sitesConfig.sites).forEach(function (domain) {
     var config = sitesConfig.sites[domain];
-    var root = config.root ? pathJoin("/", config.root) : "/";
+    var root = config.root ? pathJoin("/", config.root, "/") : "/";
 
+    var root = config.root ? pathJoin("/", config.root, "/") : "/";
     var backend = "http://127.0.0.1:" + sitesConfig.port + root;
+    var proxy = "    proxy_pass " + backend + ";\n";
+    if (config.root) {
+      proxy += "    proxy_redirect default;\n";
+    }
     var top = config.ssl ? httpsSites : httpSites;
-    var list = top[backend] || (top[backend] = []);
+    var list = top[proxy] || (top[proxy] = []);
     list.push(domain);
 
     if (config.ssl) {
@@ -27,14 +32,14 @@ fs.readdirSync(groupDir).forEach(function (name) {
   });
 });
 
-Object.keys(httpSites).forEach(function (backend) {
-  var list = httpSites[backend];
+Object.keys(httpSites).forEach(function (proxy) {
+  var list = httpSites[proxy];
   console.log(
     "server{\n" +
     list.map(serverName).join("") +
     "  listen 80;\n" +
     "  location / {\n" +
-    "    proxy_pass " + backend + ";\n" +
+    proxy +
     "    proxy_http_version 1.1;\n" +
     "    proxy_set_header Host $host;\n" +
     "  }\n" +
@@ -42,8 +47,8 @@ Object.keys(httpSites).forEach(function (backend) {
   );
 });
 
-Object.keys(httpsSites).forEach(function (backend) {
-  var list = httpsSites[backend];
+Object.keys(httpsSites).forEach(function (proxy) {
+  var list = httpsSites[proxy];
   console.log(
     "server{\n" +
     list.map(serverName).join("") +
@@ -51,9 +56,8 @@ Object.keys(httpsSites).forEach(function (backend) {
     "  ssl_certificate /home/tim/startssl/ssl-unified.crt;\n" +
     "  ssl_certificate_key /home/tim/startssl/ssl.key;\n" +
     "  location / {\n" +
-    "    proxy_pass " + backend + ";\n" +
+    proxy +
     "    proxy_http_version 1.1;\n" +
-    "    proxy_set_header Host $host;\n" +
     "  }\n" +
     "}\n"
   );
