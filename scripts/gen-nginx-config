@@ -24,6 +24,7 @@ fs.readdirSync(groupDir).forEach(function (name) {
       "    proxy_set_header Host $host;\n";
     if (config.root) {
       proxy += "    proxy_redirect default;\n";
+      proxy += "    proxy_redirect " + root + " /;\n";
     }
     var top = config.ssl ? httpsSites : httpSites;
     var list = top[proxy] || (top[proxy] = []);
