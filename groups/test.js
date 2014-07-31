@@ -34,7 +34,6 @@ module.exports = {
     },
     "desktop.creationix.com": {
       url: "https://github.com/creationix/tedit.git",
-      ref: "refs/heads/minimal",
       root: "build/minimal",
       runtimes: { js: jsRuntime },
     },
