@@ -37,5 +37,10 @@ module.exports = {
       root: "build/minimal",
       runtimes: { js: jsRuntime },
     },
+    "bananas.creationix.com": {
+      url: "https://github.com/creationix/bananas.git",
+      root: "www",
+      runtimes: { js: jsRuntime },
+    },
   }
 };
