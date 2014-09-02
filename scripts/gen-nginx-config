@@ -14,8 +14,16 @@ var extras = {
   "    proxy_pass http://127.0.0.1:5000;\n" +
   "    proxy_http_version 1.1;\n" +
   "    proxy_set_header Host $host;\n" +
+  "  }\n",
+  "howtonode.org":
+  "  location / {\n" +
+  "    proxy_pass http://127.0.0.1:4000;\n" +
+  "    proxy_http_version 1.1;\n" +
+  "    proxy_set_header Host $host;\n" +
   "  }\n"
 }
+
+httpSites[extras["howtonode.org"]] = ["howtonode.org"];
 
 fs.readdirSync(groupDir).forEach(function (name) {
   var sitesConfig = require(pathJoin(groupDir, name));
@@ -68,6 +76,9 @@ Object.keys(httpsSites).forEach(function (proxy) {
     "  listen 443 ssl;\n" +
     "  ssl_certificate /home/tim/startssl/ssl-unified.crt;\n" +
     "  ssl_certificate_key /home/tim/startssl/ssl.key;\n" +
+    "  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;\n" +
+    "  ssl_prefer_server_ciphers on;\n" +
+    '  ssl_ciphers "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS";\n' +
     proxy +
     "}\n"
   );
