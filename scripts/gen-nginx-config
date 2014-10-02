@@ -78,6 +78,7 @@ Object.keys(httpSites).forEach(function (proxy) {
     "server{\n" +
     list.map(serverName).join("") +
     "  listen 80;\n" +
+    "  listen [::]:80;\n" +
     proxy +
     "}\n"
   );
@@ -89,6 +90,7 @@ Object.keys(httpsSites).forEach(function (proxy) {
     "server{\n" +
     list.map(serverName).join("") +
     "  listen 443 ssl;\n" +
+    "  listen [::]:443 ssl;\n" +
     "  ssl_certificate /home/tim/startssl/ssl-unified.crt;\n" +
     "  ssl_certificate_key /home/tim/startssl/ssl.key;\n" +
     "  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;\n" +
@@ -104,6 +106,7 @@ if (redirects.length) {
     "\n# Combined force SSL redirects" +
     "\nserver {\n" +
     "  listen 80;\n" +
+    "  listen [::]:80;\n" +
     redirects.map(serverName).join("") +
     "  return 301 https://$host$request_uri;\n" +
     "}"
