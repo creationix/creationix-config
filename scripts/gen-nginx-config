@@ -9,6 +9,14 @@ var httpSites = {};
 var httpsSites = {};
 
 var extras = {
+  "lit.luvit.io":
+  "  location / {\n" +
+  "    proxy_pass http://127.0.0.1:4822;\n" +
+  "    proxy_http_version 1.1;\n" +
+  "    proxy_set_header Host $host;\n" +
+  "    proxy_set_header Upgrade $http_upgrade;\n" +
+  "    proxy_set_header Connection \"upgrade\";\n" +
+  "  }\n",
   "creationix.com":
   "  location /api/ {\n" +
   "    proxy_pass http://127.0.0.1:5000;\n" +
@@ -37,6 +45,7 @@ var extras = {
 
 httpSites[extras["howtonode.org"]] = ["howtonode.org"];
 httpSites[extras["static.creationix.com"]] = ["static.creationix.com"];
+httpSites[extras["lit.luvit.io"]] = ["lit.luvit.io"];
 httpsSites[extras["try.luvit.io"]] = ["try.luvit.io"];
 redirects.push("try.luvit.io");
 

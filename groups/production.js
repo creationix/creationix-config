@@ -9,17 +9,18 @@ module.exports = {
     "luvit.io": {
       url: "git@github.com:luvit/luvit.io.git",
       runtimes: { js: jsRuntime },
+      ssl: "www.luvit.io",
     },
     "tedit.creationix.com": {
       url: "git@github.com:creationix/tedit.git",
       root: "build/web",
       runtimes: { js: jsRuntime },
-      ssl: true,
+      ssl: "tedit.creationix.com",
     },
     "creationix.com": {
       url: "git@github.com:creationix/creationix.com",
       runtimes: { js: jsRuntime },
-      ssl: true,
+      ssl: "tedit.creationix.com",
     },
   }
 };
