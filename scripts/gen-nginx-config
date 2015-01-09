@@ -46,6 +46,7 @@ var extras = {
 httpSites[extras["howtonode.org"]] = ["howtonode.org"];
 httpSites[extras["static.creationix.com"]] = ["static.creationix.com"];
 httpSites[extras["lit.luvit.io"]] = ["lit.luvit.io"];
+httpsSites[extras["lit.luvit.io"]] = ["lit.luvit.io"];
 httpsSites[extras["try.luvit.io"]] = ["try.luvit.io"];
 redirects.push("try.luvit.io");
 
@@ -95,19 +96,21 @@ Object.keys(httpSites).forEach(function (proxy) {
 
 Object.keys(httpsSites).forEach(function (proxy) {
   var list = httpsSites[proxy];
-  console.log(
-    "server{\n" +
-    list.map(serverName).join("") +
-    "  listen 443 ssl;\n" +
-    "  listen [::]:443 ssl;\n" +
-    "  ssl_certificate /home/tim/startssl/ssl-unified.crt;\n" +
-    "  ssl_certificate_key /home/tim/startssl/ssl.key;\n" +
-    "  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;\n" +
-    "  ssl_prefer_server_ciphers on;\n" +
-    '  ssl_ciphers "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS";\n' +
-    proxy +
-    "}\n"
-  );
+  list.forEach(function (domain) {
+    console.log(
+      "server{\n" +
+      "  server_name " + domain + ";\n" +
+      "  listen 443 ssl;\n" +
+      "  listen [::]:443 ssl;\n" +
+      "  ssl_certificate /home/tim/startssl/" + domain + "/ssl-unified.crt;\n" +
+      "  ssl_certificate_key /home/tim/startssl/" + domain + "/ssl.key;\n" +
+      "  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;\n" +
+      "  ssl_prefer_server_ciphers on;\n" +
+      '  ssl_ciphers "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS";\n' +
+      proxy +
+      "}\n"
+    );
+  });
 });
 
 if (redirects.length) {
