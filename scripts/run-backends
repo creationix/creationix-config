@@ -1,4 +1,4 @@
-#!/usr/local/bin/node --harmony
+#!/usr/local/bin/iojs
 
 var fs = require('fs');
 var pathJoin = require('path').join;
@@ -10,7 +10,7 @@ var scriptPath = pathJoin(__dirname, "../node_modules/wheaty/bin/wheaty-group.js
 fs.readdirSync(groupDir).forEach(function (name) {
   var configPath = pathJoin(groupDir, name);
   var config = require(configPath);
-  var args = ["--harmony_generators", scriptPath, configPath];
+  var args = [scriptPath, configPath];
   var child;
   var started = Date.now();
   spawn();
