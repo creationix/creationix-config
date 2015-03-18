@@ -6,11 +6,6 @@ module.exports = {
   group: "tim",
   cacheDir: pathJoin(__dirname, "../git"),
   sites: {
-    "luvit.io": {
-      url: "git@github.com:luvit/luvit.io.git",
-      runtimes: { js: jsRuntime },
-      ssl: "www.luvit.io",
-    },
     "tedit.creationix.com": {
       url: "git@github.com:creationix/tedit.git",
       root: "build/web",

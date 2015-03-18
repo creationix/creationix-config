@@ -8,14 +8,36 @@ var redirects = [];
 var httpSites = {};
 var httpsSites = {};
 
+console.log("map $http_upgrade $connection_upgrade {\n" +
+"  default upgrade;\n" +
+"  ''      $http_connection;\n" +
+"}");
+
+
 var extras = {
+  'luvit.io':
+  '  location / {\n' +
+  '    proxy_pass http://127.0.0.1:9091/;\n' +
+  '    proxy_http_version 1.1;\n' +
+  '    proxy_set_header Host $host;\n' +
+  "    proxy_set_header Upgrade $http_upgrade;\n" +
+  "    proxy_set_header Connection $connection_upgrade;\n" +
+  '  }\n',
+  'staging.luvit.io':
+  '  location / {\n' +
+  '    proxy_pass http://127.0.0.1:8080/;\n' +
+  '    proxy_http_version 1.1;\n' +
+  '    proxy_set_header Host $host;\n' +
+  "    proxy_set_header Upgrade $http_upgrade;\n" +
+  "    proxy_set_header Connection $connection_upgrade;\n" +
+  '  }\n',
   "lit.luvit.io":
   "  location / {\n" +
   "    proxy_pass http://127.0.0.1:4822;\n" +
   "    proxy_http_version 1.1;\n" +
   "    proxy_set_header Host $host;\n" +
   "    proxy_set_header Upgrade $http_upgrade;\n" +
-  "    proxy_set_header Connection \"upgrade\";\n" +
+  "    proxy_set_header Connection $connection_upgrade;\n" +
   "  }\n",
   "creationix.com":
   "  location /api/ {\n" +
@@ -35,7 +57,7 @@ var extras = {
   "    proxy_http_version 1.1;\n" +
   "    proxy_set_header Host $host;\n" +
   "    proxy_set_header Upgrade $http_upgrade;\n" +
-  "    proxy_set_header Connection \"upgrade\";\n" +
+  "    proxy_set_header Connection $connection_upgrade;\n" +
   "  }\n",
   "static.creationix.com":
   "  location / {\n" +
@@ -46,9 +68,12 @@ var extras = {
 httpSites[extras["howtonode.org"]] = ["howtonode.org"];
 httpSites[extras["static.creationix.com"]] = ["static.creationix.com"];
 httpSites[extras["lit.luvit.io"]] = ["lit.luvit.io"];
+httpSites[extras["staging.luvit.io"]] = ["staging.luvit.io"];
+httpsSites[extras["luvit.io"]] = ["luvit.io"];
 httpsSites[extras["lit.luvit.io"]] = ["lit.luvit.io"];
 httpsSites[extras["try.luvit.io"]] = ["try.luvit.io"];
 redirects.push("try.luvit.io");
+redirects.push("luvit.io");
 
 fs.readdirSync(groupDir).forEach(function (name) {
   var sitesConfig = require(pathJoin(groupDir, name));
