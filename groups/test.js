@@ -11,6 +11,11 @@ module.exports = {
       runtimes: { js: jsRuntime },
       ssl: true,
     },
+    "nodemcu.creationix.com": {
+      url: "git@github.com:creationix/nodemcu-webide.git",
+      root: "host",
+      runtimes: { js: jsRuntime },
+    },
     "dukluv.io": {
       url: "git@github.com:creationix/dukluv.git",
       root: "www",
