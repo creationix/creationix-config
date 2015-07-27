@@ -6,6 +6,11 @@ module.exports = {
   group: "tim",
   cacheDir: pathJoin(__dirname, "../git"),
   sites: {
+    "uscript.creationix.com": {
+      url: "git@github.com:creationix/uscript.git",
+      runtimes: { js: jsRuntime },
+      root: "ide",
+    },
     "pbjs.creationix.com": {
       url: "git@github.com:creationix/generation.git",
       runtimes: { js: jsRuntime },
