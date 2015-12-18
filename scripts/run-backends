@@ -1,4 +1,4 @@
-#!/usr/local/bin/iojs
+#!/usr/local/bin/node
 
 var fs = require('fs');
 var pathJoin = require('path').join;
